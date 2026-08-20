@@ -16,7 +16,7 @@
 #ifndef HIMAX_COMMON_H
 #define HIMAX_COMMON_H
 
-//#include <asm/segment.h>
+#include <asm/segment.h>
 
 #include <linux/uaccess.h>
 #include <linux/atomic.h>
@@ -40,12 +40,10 @@
 #include "himax_platform.h"
 #include <linux/kallsyms.h>
 #include <drm/drm_panel.h>
-#include <linux/ktime.h>
-#include <linux/pinctrl/consumer.h>
 
-//#if defined(CONFIG_OF)
-//	#include <linux/of_gpio.h>
-//#endif
+#if defined(CONFIG_OF)
+	#include <linux/of_gpio.h>
+#endif
 
 #define HIMAX_DRIVER_VER "2.0.0.70_ALG_01"
 
@@ -450,7 +448,7 @@ struct himax_ts_data {
 	uint32_t pl_y_min;
 	uint32_t pl_y_max;
 
-	struct gpio_desc *rst_gpio;
+	int rst_gpio;
 	int use_irq;
 	int (*power)(int on);
 	int pre_finger_data[10][2];
