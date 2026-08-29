@@ -1,0 +1,528 @@
+/* DTSI created with linux-devicetree-picker-AL Version 1.4 */
+
+/*
+
+https://github.com/sc7280-mainline/linux.git
+commit f8442dd4bf0226c33aa78fa6db486ba8c70d66f8 (HEAD -> sc7280-7.2.y, tag: v7.2.2-sc7280, origin/sc7280-7.2.y)
+
+./linux-devicetree-picker-AL.sh \
+targetfile=../sm6350-mainline_linux/arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dts \
+includefolder=../sm6350-mainline_linux/include \
+includefolder=../sm6350-mainline_linux/arch/arm64/boot/dts/include \
+sourcefile=../sc7280-mainline_linux/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts \
+sourceincludefolder=../sc7280-mainline_linux/include \
+sourceincludefolder=../sc7280-mainline_linux/arch/arm64/boot/dts/include \
+outfilename=outfile.dtsi \
+nodetoadd=wcd_capture_dai_link
+*/
+
+&sound {
+   wcd_capture_dai_link:wcd-capture-dai-link {
+      link-name = "WCD Capture";
+   };
+};
+
+&wcd_capture_dai_link {
+   generated_ec877913_7d58_4702_a577_353468e72dc9_codec:codec {
+      sound-dai = < &wcd9385 0x1 >,
+            < &swr1 0x0 >,
+            < &lpass_tx_macro 0x0 >;
+   };
+};
+
+&wcd_capture_dai_link {
+   generated_4aba43e5_8a8b_4402_8a8d_98f1ab9f4160_cpu:cpu {
+      sound-dai = < &q6afedai 0x78 >;
+   };
+};
+
+&wcd_capture_dai_link {
+   generated_fef6283e_ce26_40fe_9297_088e17f71bdb_platform:platform {
+      sound-dai = < &q6routing >;
+   };
+};
+
+&{/} {
+   wcd9385:audio-codec {
+      compatible = "qcom,wcd9385-codec";
+      pinctrl-0 = < &wcd_reset_n >;
+      pinctrl-1 = < &wcd_reset_n_sleep >;
+      pinctrl-names = "default",
+                "sleep";
+      reset-gpios = < &tlmm 0x53 0x1 >;
+      vdd-rxtx-supply = < &vreg_l18b >;
+      vdd-io-supply = < &vreg_l18b >;
+      vdd-buck-supply = < &vreg_l17b >;
+      vdd-mic-bias-supply = < &vreg_bob >;
+      qcom,micbias1-microvolt = < 0x1b7740 >;
+      qcom,micbias2-microvolt = < 0x1b7740 >;
+      qcom,micbias3-microvolt = < 0x1b7740 >;
+      qcom,micbias4-microvolt = < 0x1b7740 >;
+      qcom,mbhc-buttons-vthreshold-microvolt = < 0x124f8 0x249f0 0x39dc8 0x7a120 0x7a120 0x7a120 0x7a120 0x7a120 >;
+      qcom,mbhc-headset-vthreshold-microvolt = < 0x19f0a0 >;
+      qcom,mbhc-headphone-vthreshold-microvolt = < 0xc350 >;
+      qcom,rx-device = < &wcd_rx >;
+      qcom,tx-device = < &wcd_tx >;
+      #sound-dai-cells = < 0x1 >;
+      phandle = < 0x1a9 >;
+   };
+};
+
+&soc {
+   swr1:soundwire@3230000 {
+      compatible = "qcom,soundwire-v1.6.0";
+      reg = < 0x0 0x3230000 0x0 0x2000 >;
+      interrupts-extended = < &intc 0x0 0x1f0 0x4 >,
+                      < &pdc 0x82 0x4 >;
+      clocks = < &lpass_tx_macro >;
+      clock-names = "iface";
+      qcom,din-ports = < 0x3 >;
+      qcom,dout-ports = < 0x0 >;
+      resets = < &lpass_audiocc 0x1 >;
+      reset-names = "swr_audio_cgcr";
+      qcom,ports-sinterval-low = [ 01 03 03 ];
+      qcom,ports-offset1 = [ 01 00 02 ];
+      qcom,ports-offset2 = [ 00 00 00 ];
+      qcom,ports-hstart = [ FF FF FF ];
+      qcom,ports-hstop = [ FF FF FF ];
+      qcom,ports-word-length = [ FF 00 FF ];
+      qcom,ports-block-pack-mode = [ FF FF FF ];
+      qcom,ports-block-group-count = [ FF FF FF ];
+      qcom,ports-lane-control = [ 00 01 00 ];
+      #sound-dai-cells = < 0x1 >;
+      #address-cells = < 0x2 >;
+      #size-cells = < 0x0 >;
+      status = "okay";
+      phandle = < 0x1aa >;
+   };
+};
+
+&swr1 {
+   wcd_tx:codec@0,3 {
+      compatible = "sdw20217010d00";
+      reg = < 0x0 0x3 >;
+      qcom,tx-port-mapping = < 0x1 0x2 0x3 0x4 >;
+      phandle = < 0x1d2 >;
+   };
+};
+
+&soc {
+   lpass_tx_macro:codec@3220000 {
+      reg = < 0x0 0x3220000 0x0 0x1000 >;
+      pinctrl-names = "default";
+      pinctrl-0 = < &lpass_tx_swr_clk >,
+            < &lpass_tx_swr_data >;
+      clocks = < &q6afecc 0x39 0x1 >,
+         < &q6afecc 0x3a 0x1 >,
+         < &q6afecc 0x66 0x1 >,
+         < &q6afecc 0x67 0x1 >,
+         < &lpass_va_macro >;
+      clock-names = "mclk",
+              "npl",
+              "macro",
+              "dcodec",
+              "fsgen";
+      clock-output-names = "mclk";
+      #clock-cells = < 0x0 >;
+      #sound-dai-cells = < 0x1 >;
+      status = "okay";
+      compatible = "qcom,sm7325-lpass-tx-macro",
+             "qcom,sm8450-lpass-tx-macro";
+      phandle = < 0xf2 >;
+   };
+};
+
+&soc {
+   lpass_audiocc:clock-controller@3300000 {
+      reg = < 0x0 0x3300000 0x0 0x30000 >,
+      < 0x0 0x32a9000 0x0 0x1000 >;
+      clocks = < &rpmhcc 0x0 >,
+         < &lpass_aon 0x6 >;
+      clock-names = "bi_tcxo",
+              "lpass_aon_cc_main_rcg_clk_src";
+      #clock-cells = < 0x1 >;
+      #power-domain-cells = < 0x1 >;
+      #reset-cells = < 0x1 >;
+      compatible = "qcom,qcm6490-lpassaudiocc";
+      phandle = < 0xee >;
+   };
+};
+
+&lpass_tlmm {
+   lpass_tx_swr_clk:tx-swr-clk-state {
+      pins = "gpio0";
+      function = "swr_tx_clk";
+      drive-strength = < 0x2 >;
+      slew-rate = < 0x1 >;
+      bias-disable;
+      phandle = < 0xef >;
+   };
+};
+
+&lpass_tlmm {
+   lpass_tx_swr_data:tx-swr-data-state {
+      pins = "gpio1",
+       "gpio2",
+       "gpio14";
+      function = "swr_tx_data";
+      drive-strength = < 0x2 >;
+      slew-rate = < 0x1 >;
+      bias-bus-hold;
+      phandle = < 0xf0 >;
+   };
+};
+
+&soc {
+   lpass_va_macro:codec@3370000 {
+      compatible = "qcom,sc7280-lpass-va-macro";
+      reg = < 0x0 0x3370000 0x0 0x1000 >;
+      clocks = < &q6afecc 0x39 0x1 >,
+         < &q6afecc 0x66 0x1 >,
+         < &q6afecc 0x67 0x1 >;
+      clock-names = "mclk",
+              "macro",
+              "dcodec";
+      clock-output-names = "fsgen";
+      #clock-cells = < 0x0 >;
+      #sound-dai-cells = < 0x1 >;
+      vdd-micb-supply = < &vreg_bob >;
+      qcom,dmic-sample-rate = < 0x493e00 >;
+      status = "okay";
+      phandle = < 0xec >;
+   };
+};
+
+&soc {
+   lpass_aon:clock-controller@3380000 {
+      compatible = "qcom,sc7280-lpassaoncc";
+      reg = < 0x0 0x3380000 0x0 0x30000 >;
+      clocks = < &rpmhcc 0x0 >,
+         < &rpmhcc 0x1 >,
+         < &lpass_core 0x3 >;
+      clock-names = "bi_tcxo",
+              "bi_tcxo_ao",
+              "iface";
+      #clock-cells = < 0x1 >;
+      #power-domain-cells = < 0x1 >;
+      status = "reserved";
+      phandle = < 0xf6 >;
+   };
+};
+
+&soc {
+   lpass_core:clock-controller@3900000 {
+      compatible = "qcom,sc7280-lpasscorecc";
+      reg = < 0x0 0x3900000 0x0 0x50000 >;
+      clocks = < &rpmhcc 0x0 >;
+      clock-names = "bi_tcxo";
+      power-domains = < &lpass_hm 0x0 >;
+      #clock-cells = < 0x1 >;
+      #power-domain-cells = < 0x1 >;
+      status = "reserved";
+      phandle = < 0xf7 >;
+   };
+};
+
+&soc {
+   lpass_hm:clock-controller@3c00000 {
+      compatible = "qcom,sc7280-lpasshm";
+      reg = < 0x0 0x3c00000 0x0 0x28 >;
+      clocks = < &rpmhcc 0x0 >;
+      clock-names = "bi_tcxo";
+      #clock-cells = < 0x1 >;
+      #power-domain-cells = < 0x1 >;
+      status = "reserved";
+      phandle = < 0xf8 >;
+   };
+};
+
+&tlmm {
+   wcd_reset_n:wcd-reset-n-state {
+      pins = "gpio83";
+      function = "gpio";
+      drive-strength = < 0x10 >;
+      phandle = < 0x1ce >;
+   };
+};
+
+&tlmm {
+   wcd_reset_n_sleep:wcd-reset-n-sleep-state {
+      pins = "gpio83";
+      function = "gpio";
+      drive-strength = < 0x10 >;
+      bias-disable;
+      phandle = < 0x1cf >;
+   };
+};
+
+&apps_rsc {
+   generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0:regulators-0 {
+      compatible = "qcom,pm7325-rpmh-regulators";
+      qcom,pmic-id = "b";
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_s1b:smps1 {
+      regulator-name = "vreg_s1b";
+      regulator-min-microvolt = < 0x1c1380 >;
+      regulator-max-microvolt = < 0x1f20c0 >;
+      phandle = < 0x57 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_s7b:smps7 {
+      regulator-name = "vreg_s7b";
+      regulator-min-microvolt = < 0x829d8 >;
+      regulator-max-microvolt = < 0x111700 >;
+      phandle = < 0x96 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_s8b:smps8 {
+      regulator-name = "vreg_s8b";
+      regulator-min-microvolt = < 0x124f80 >;
+      regulator-max-microvolt = < 0x16e360 >;
+      regulator-initial-mode = < 0x0 >;
+      phandle = < 0x55 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l1b:ldo1 {
+      regulator-name = "vreg_l1b";
+      regulator-min-microvolt = < 0xc96a8 >;
+      regulator-max-microvolt = < 0xe1d48 >;
+      regulator-initial-mode = < 0x3 >;
+      phandle = < 0x146 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l2b:ldo2 {
+      regulator-name = "vreg_l2b";
+      regulator-min-microvolt = < 0x2932e0 >;
+      regulator-max-microvolt = < 0x3613c0 >;
+      regulator-initial-mode = < 0x3 >;
+      phandle = < 0x145 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l3b:ldo3 {
+      regulator-name = "vreg_l3b";
+      regulator-min-microvolt = < 0x4c2c0 >;
+      regulator-max-microvolt = < 0xde2b0 >;
+      regulator-initial-mode = < 0x3 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l6b:ldo6 {
+      regulator-name = "vreg_l6b";
+      regulator-min-microvolt = < 0x116520 >;
+      regulator-max-microvolt = < 0x1339e0 >;
+      regulator-initial-mode = < 0x3 >;
+      phandle = < 0xe2 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l7b:ldo7 {
+      regulator-name = "vreg_l7b";
+      regulator-min-microvolt = < 0x2d0b40 >;
+      regulator-max-microvolt = < 0x2d0b40 >;
+      regulator-initial-mode = < 0x3 >;
+      phandle = < 0xde >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l8b:ldo8 {
+      regulator-name = "vreg_l8b";
+      regulator-min-microvolt = < 0xd4670 >;
+      regulator-max-microvolt = < 0xecd10 >;
+      regulator-initial-mode = < 0x3 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l9b:ldo9 {
+      regulator-name = "vreg_l9b";
+      regulator-min-microvolt = < 0x124f80 >;
+      regulator-max-microvolt = < 0x13e5c0 >;
+      regulator-initial-mode = < 0x3 >;
+      phandle = < 0xdf >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l11b:ldo11 {
+      regulator-name = "vreg_l11b";
+      regulator-min-microvolt = < 0x16f300 >;
+      regulator-max-microvolt = < 0x1e8480 >;
+      regulator-initial-mode = < 0x3 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l12b:ldo12 {
+      regulator-name = "vreg_l12b";
+      regulator-min-microvolt = < 0xb7598 >;
+      regulator-max-microvolt = < 0xc92c0 >;
+      regulator-initial-mode = < 0x3 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l13b:ldo13 {
+      regulator-name = "vreg_l13b";
+      regulator-min-microvolt = < 0x81650 >;
+      regulator-max-microvolt = < 0xc92c0 >;
+      regulator-initial-mode = < 0x3 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l14b:ldo14 {
+      regulator-name = "vreg_l14b";
+      regulator-min-microvolt = < 0x107ac0 >;
+      regulator-max-microvolt = < 0x13e5c0 >;
+      regulator-initial-mode = < 0x3 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l15b:ldo15 {
+      regulator-name = "vreg_l15b";
+      regulator-min-microvolt = < 0xbac48 >;
+      regulator-max-microvolt = < 0xf9060 >;
+      regulator-initial-mode = < 0x3 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l16b:ldo16 {
+      regulator-name = "vreg_l16b";
+      regulator-min-microvolt = < 0x10c8e0 >;
+      regulator-max-microvolt = < 0x13d620 >;
+      regulator-initial-mode = < 0x3 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l17b:ldo17 {
+      regulator-name = "vreg_l17b";
+      regulator-min-microvolt = < 0x19f0a0 >;
+      regulator-max-microvolt = < 0x1cfde0 >;
+      regulator-initial-mode = < 0x3 >;
+      phandle = < 0x1d0 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l18b:ldo18 {
+      regulator-name = "vreg_l18b";
+      regulator-min-microvolt = < 0x1b7740 >;
+      regulator-max-microvolt = < 0x1e8480 >;
+      regulator-initial-mode = < 0x3 >;
+      phandle = < 0x64 >;
+   };
+};
+
+&generated_c9600816_377a_4ef7_abb0_a33774c73a24_regulators_0 {
+   vreg_l19b:ldo19 {
+      regulator-name = "vreg_l19b";
+      regulator-min-microvolt = < 0x1b7740 >;
+      regulator-max-microvolt = < 0x1e8480 >;
+      regulator-initial-mode = < 0x3 >;
+      phandle = < 0x95 >;
+   };
+};
+
+&soc {
+   swr0:soundwire@3210000 {
+      compatible = "qcom,soundwire-v1.6.0";
+      reg = < 0x0 0x3210000 0x0 0x2000 >;
+      interrupts = < 0x0 0x9b 0x4 >;
+      clocks = < &lpass_rx_macro >;
+      clock-names = "iface";
+      qcom,din-ports = < 0x0 >;
+      qcom,dout-ports = < 0x5 >;
+      resets = < &lpass_audiocc 0x0 >;
+      reset-names = "swr_audio_cgcr";
+      qcom,ports-word-length = [ 01 07 04 FF FF ];
+      qcom,ports-sinterval-low = [ 03 3F 1F 03 03 ];
+      qcom,ports-offset1 = [ 00 00 0B 01 01 ];
+      qcom,ports-offset2 = [ 00 00 0B 00 00 ];
+      qcom,ports-lane-control = [ 01 00 00 00 00 ];
+      qcom,ports-block-pack-mode = [ FF 00 01 FF FF ];
+      qcom,ports-hstart = [ FF 03 FF FF FF ];
+      qcom,ports-hstop = [ FF 06 FF FF FF ];
+      qcom,ports-block-group-count = [ FF FF FF FF 00 ];
+      #sound-dai-cells = < 0x1 >;
+      #address-cells = < 0x2 >;
+      #size-cells = < 0x0 >;
+      status = "okay";
+   };
+};
+
+&swr0 {
+   wcd_rx:codec@0,4 {
+      compatible = "sdw20217010d00";
+      reg = < 0x0 0x4 >;
+      qcom,rx-port-mapping = < 0x1 0x2 0x3 0x4 0x5 >;
+      phandle = < 0x1d1 >;
+   };
+};
+
+&soc {
+   lpass_rx_macro:codec@3200000 {
+      compatible = "qcom,sc7280-lpass-rx-macro";
+      reg = < 0x0 0x3200000 0x0 0x1000 >;
+      pinctrl-names = "default";
+      pinctrl-0 = < &lpass_rx_swr_clk >,
+            < &lpass_rx_swr_data >;
+      clocks = < &q6afecc 0x39 0x1 >,
+         < &q6afecc 0x3a 0x1 >,
+         < &q6afecc 0x66 0x1 >,
+         < &q6afecc 0x67 0x1 >,
+         < &lpass_va_macro >;
+      clock-names = "mclk",
+              "npl",
+              "macro",
+              "dcodec",
+              "fsgen";
+      clock-output-names = "mclk";
+      #clock-cells = < 0x0 >;
+      #sound-dai-cells = < 0x1 >;
+      status = "okay";
+      phandle = < 0xed >;
+   };
+};
+
+&lpass_tlmm {
+   lpass_rx_swr_clk:rx-swr-clk-state {
+      pins = "gpio3";
+      function = "swr_rx_clk";
+      drive-strength = < 0x2 >;
+      slew-rate = < 0x1 >;
+      bias-disable;
+      phandle = < 0xe9 >;
+   };
+};
+
+&lpass_tlmm {
+   lpass_rx_swr_data:rx-swr-data-state {
+      pins = "gpio4",
+       "gpio5";
+      function = "swr_rx_data";
+      drive-strength = < 0x2 >;
+      slew-rate = < 0x1 >;
+      bias-bus-hold;
+      phandle = < 0xea >;
+   };
+};
+

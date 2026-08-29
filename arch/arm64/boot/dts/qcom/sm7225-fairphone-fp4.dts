@@ -28,6 +28,8 @@
 #include "pm7250b.dtsi"
 #include "pmk8350.dtsi"
 
+#include "sm7225-fairphone-fp4-wcd9380.dtsi"
+
 / {
 	model = "Fairphone 4";
 	compatible = "fairphone,fp4", "qcom,sm7225";
