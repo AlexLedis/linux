@@ -2,16 +2,16 @@
 
 /*
 
-https://github.com/sc7280-mainline/linux.git
-commit f8442dd4bf0226c33aa78fa6db486ba8c70d66f8 (HEAD -> sc7280-7.2.y, tag: v7.2.2-sc7280, origin/sc7280-7.2.y)
+https://github.com/sm8250-mainline/linux.git
+commit f8442dd4bf0226c33aa78fa6db486ba8c70d66f8 (HEAD -> sm8250-7.2.y, tag: v7.2.2-sm8250, origin/sm8250-7.2.y)
 
 ./linux-devicetree-picker-AL.sh \
 targetfile=../sm6350-mainline_linux/arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dts \
 includefolder=../sm6350-mainline_linux/include \
 includefolder=../sm6350-mainline_linux/arch/arm64/boot/dts/include \
-sourcefile=../sc7280-mainline_linux/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts \
-sourceincludefolder=../sc7280-mainline_linux/include \
-sourceincludefolder=../sc7280-mainline_linux/arch/arm64/boot/dts/include \
+sourcefile=../sm8250-mainline_linux/arch/arm64/boot/dts/qcom/sm8250-fairphone-fp5.dts \
+sourceincludefolder=../sm8250-mainline_linux/include \
+sourceincludefolder=../sm8250-mainline_linux/arch/arm64/boot/dts/include \
 outfilename=outfile.dtsi \
 nodetoadd=wcd_capture_dai_link
 */
@@ -24,7 +24,7 @@ nodetoadd=wcd_capture_dai_link
 
 &wcd_capture_dai_link {
    generated_ec877913_7d58_4702_a577_353468e72dc9_codec:codec {
-      sound-dai = < &wcd9385 0x1 >,
+      sound-dai = < &wcd9380 0x1 >,
             < &swr1 0x0 >,
             < &lpass_tx_macro 0x0 >;
    };
@@ -43,8 +43,8 @@ nodetoadd=wcd_capture_dai_link
 };
 
 &{/} {
-   wcd9385:audio-codec {
-      compatible = "qcom,wcd9385-codec";
+   wcd9380:audio-codec {
+      compatible = "qcom,wcd9380-codec";
       pinctrl-0 = < &wcd_reset_n >;
       pinctrl-1 = < &wcd_reset_n_sleep >;
       pinctrl-names = "default",
@@ -81,15 +81,17 @@ nodetoadd=wcd_capture_dai_link
       qcom,dout-ports = < 0x1 >;
 /*      resets = < &lpass_audiocc 0x1 >;
       reset-names = "swr_audio_cgcr";*/
-      qcom,ports-sinterval-low = [ 01 03 03 ];
-      qcom,ports-offset1 = [ 01 00 02 ];
-      qcom,ports-offset2 = [ 00 00 00 ];
-      qcom,ports-hstart = [ FF FF FF ];
-      qcom,ports-hstop = [ FF FF FF ];
-      qcom,ports-word-length = [ FF 00 FF ];
-      qcom,ports-block-pack-mode = [ FF FF FF ];
-      qcom,ports-block-group-count = [ FF FF FF ];
-      qcom,ports-lane-control = [ 00 01 00 ];
+      /* The following values come from Android kernel techpack/audio/asoc/kona-port-config.h */
+      /* SWR_MSTR_PORT_LEN = 8 entries expected by driver */
+      qcom,ports-word-length = [ FF FF FF FF FF FF FF FF ];
+      qcom,ports-sinterval-low = [ FF 03 03 03 03 FF FF FF ];
+      qcom,ports-offset1 = [ FF 01 02 01 00 FF FF FF ];
+      qcom,ports-offset2 = [ FF 00 00 00 00 FF FF FF ];
+      qcom,ports-lane-control = [ FF 00 00 00 00 FF FF FF ];
+      qcom,ports-block-pack-mode = [ FF FF FF FF FF FF FF FF ];
+      qcom,ports-hstart = [ FF FF FF FF FF FF FF FF ];
+      qcom,ports-hstop = [ FF FF FF FF FF FF FF FF ];
+      qcom,ports-block-group-count = [ FF FF FF FF FF FF FF FF ];
       #sound-dai-cells = < 0x1 >;
       #address-cells = < 0x2 >;
       #size-cells = < 0x0 >;
@@ -127,25 +129,8 @@ nodetoadd=wcd_capture_dai_link
       #clock-cells = < 0x0 >;
       #sound-dai-cells = < 0x1 >;
       status = "okay";
-      compatible = "qcom,sm7325-lpass-tx-macro",
-             "qcom,sm8450-lpass-tx-macro";
+      compatible = "qcom,sm8250-lpass-tx-macro";
       phandle = < 0xf2 >;
-   };
-};
-
-&soc {
-   lpass_audiocc:clock-controller@3300000 {
-      reg = < 0x0 0x3300000 0x0 0x30000 >,
-      < 0x0 0x32a9000 0x0 0x1000 >;
-      clocks = < &rpmhcc 0x0 >,
-         < &lpass_aon 0x6 >;
-      clock-names = "bi_tcxo",
-              "lpass_aon_cc_main_rcg_clk_src";
-      #clock-cells = < 0x1 >;
-      #power-domain-cells = < 0x1 >;
-      #reset-cells = < 0x1 >;
-      compatible = "qcom,qcm6490-lpassaudiocc";
-      phandle = < 0xee >;
    };
 };
 
@@ -175,7 +160,7 @@ nodetoadd=wcd_capture_dai_link
 
 &soc {
    lpass_va_macro:codec@3370000 {
-      compatible = "qcom,sc7280-lpass-va-macro";
+      compatible = "qcom,sm8250-lpass-va-macro";
       reg = < 0x0 0x3370000 0x0 0x1000 >;
       clocks = < &q6afecc 0x39 0x1 >,
          < &q6afecc 0x66 0x1 >,
@@ -190,50 +175,6 @@ nodetoadd=wcd_capture_dai_link
       qcom,dmic-sample-rate = < 0x493e00 >;
       status = "okay";
       phandle = < 0xec >;
-   };
-};
-
-&soc {
-   lpass_aon:clock-controller@3380000 {
-      compatible = "qcom,sc7280-lpassaoncc";
-      reg = < 0x0 0x3380000 0x0 0x30000 >;
-      clocks = < &rpmhcc 0x0 >,
-         < &rpmhcc 0x1 >,
-         < &lpass_core 0x3 >;
-      clock-names = "bi_tcxo",
-              "bi_tcxo_ao",
-              "iface";
-      #clock-cells = < 0x1 >;
-      #power-domain-cells = < 0x1 >;
-      status = "reserved";
-      phandle = < 0xf6 >;
-   };
-};
-
-&soc {
-   lpass_core:clock-controller@3900000 {
-      compatible = "qcom,sc7280-lpasscorecc";
-      reg = < 0x0 0x3900000 0x0 0x50000 >;
-      clocks = < &rpmhcc 0x0 >;
-      clock-names = "bi_tcxo";
-      power-domains = < &lpass_hm 0x0 >;
-      #clock-cells = < 0x1 >;
-      #power-domain-cells = < 0x1 >;
-      status = "reserved";
-      phandle = < 0xf7 >;
-   };
-};
-
-&soc {
-   lpass_hm:clock-controller@3c00000 {
-      compatible = "qcom,sc7280-lpasshm";
-      reg = < 0x0 0x3c00000 0x0 0x28 >;
-      clocks = < &rpmhcc 0x0 >;
-      clock-names = "bi_tcxo";
-      #clock-cells = < 0x1 >;
-      #power-domain-cells = < 0x1 >;
-      status = "reserved";
-      phandle = < 0xf8 >;
    };
 };
 
@@ -268,15 +209,17 @@ nodetoadd=wcd_capture_dai_link
       qcom,dout-ports = < 0x6 >;
 /*      resets = < &lpass_audiocc 0x0 >;
       reset-names = "swr_audio_cgcr";*/
-      qcom,ports-word-length = [ 01 07 04 FF FF ];
-      qcom,ports-sinterval-low = [ 03 3F 1F 03 03 ];
-      qcom,ports-offset1 = [ 00 00 0B 01 01 ];
-      qcom,ports-offset2 = [ 00 00 0B 00 00 ];
-      qcom,ports-lane-control = [ 01 00 00 00 00 ];
-      qcom,ports-block-pack-mode = [ FF 00 01 FF FF ];
-      qcom,ports-hstart = [ FF 03 FF FF FF ];
-      qcom,ports-hstop = [ FF 06 FF FF FF ];
-      qcom,ports-block-group-count = [ FF FF FF FF 00 ];
+      /* The following values come from Android kernel techpack/audio/asoc/kona-port-config.h */
+      /* SWR_MSTR_PORT_LEN = 8 entries expected by driver */
+      qcom,ports-word-length = [ 01 07 04 FF FF FF FF FF ];
+      qcom,ports-sinterval-low = [ 03 1F 1F 07 00 FF FF FF ];
+      qcom,ports-offset1 = [ 00 00 0B 01 00 FF FF FF ];
+      qcom,ports-offset2 = [ 00 00 0B 00 00 FF FF FF ];
+      qcom,ports-lane-control = [ 01 00 00 00 00 FF FF FF ];
+      qcom,ports-block-pack-mode = [ FF 00 01 FF FF FF FF FF ];
+      qcom,ports-hstart = [ FF 03 FF FF FF FF FF FF ];
+      qcom,ports-hstop = [ FF 06 FF FF FF FF FF FF ];
+      qcom,ports-block-group-count = [ FF FF FF FF 00 FF FF FF ];
       #sound-dai-cells = < 0x1 >;
       #address-cells = < 0x2 >;
       #size-cells = < 0x0 >;
@@ -295,7 +238,7 @@ nodetoadd=wcd_capture_dai_link
 
 &soc {
    lpass_rx_macro:codec@3200000 {
-      compatible = "qcom,sc7280-lpass-rx-macro";
+      compatible = "qcom,sm8250-lpass-rx-macro";
       reg = < 0x0 0x3200000 0x0 0x1000 >;
       pinctrl-names = "default";
       pinctrl-0 = < &lpass_rx_swr_clk >,
