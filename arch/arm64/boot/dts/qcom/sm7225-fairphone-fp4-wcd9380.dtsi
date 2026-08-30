@@ -72,8 +72,9 @@ nodetoadd=wcd_capture_dai_link
    swr1:soundwire@3230000 {
       compatible = "qcom,soundwire-v1.6.0";
       reg = < 0x0 0x3230000 0x0 0x2000 >;
-      interrupts-extended = < &intc 0x0 0x1f0 0x4 >,
-                      < &pdc 0x82 0x4 >;
+      interrupts-extended = 
+            <&intc GIC_SPI 296 IRQ_TYPE_LEVEL_HIGH>, // From Android 15, lagoon-audio-overlay.dtsi
+            <&pdc 144 IRQ_TYPE_LEVEL_HIGH>; // From Android 15, lagoon-audio-overlay.dtsi
       clocks = < &lpass_tx_macro >;
       clock-names = "iface";
       qcom,din-ports = < 0x3 >;
@@ -259,7 +260,8 @@ nodetoadd=wcd_capture_dai_link
    swr0:soundwire@3210000 {
       compatible = "qcom,soundwire-v1.6.0";
       reg = < 0x0 0x3210000 0x0 0x2000 >;
-      interrupts = < 0x0 0x9b 0x4 >;
+      interrupts = <GIC_SPI 297 IRQ_TYPE_LEVEL_HIGH>; // From Android 15, lagoon-audio-overlay.dtsi
+      interrupt-names = "swr_master_irq"; // From Android 15, lagoon-audio-overlay.dtsi
       clocks = < &lpass_rx_macro >;
       clock-names = "iface";
       qcom,din-ports = < 0x0 >;
